@@ -1,0 +1,16 @@
+<!DOCTYPE html>
+<html>
+<head>
+    <title>MelytiX - marketing is simple</title>
+</head>
+<body>
+    <form class="form-inline" method="POST" action="/search_console/after_select">
+            <select name="site_select" id="site" class="selectpicker form-control"">
+              {% for x in data %}
+              <option value="{{ x }}">{{ x }}</option>
+              {% endfor %}
+            </select>
+        <button class="btn btn-default" type="submit">Connect</button>
+    </form>
+</body>
+</html>

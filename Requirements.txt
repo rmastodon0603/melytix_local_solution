@@ -1,0 +1,11 @@
+google
+httplib2
+googleapiclient
+click
+requests
+Flask
+oauthlib
+oauthlibclient
+pyOpenSSL
+google-api-python-client
+Flask-Login

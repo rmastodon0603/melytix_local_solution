@@ -1,0 +1,50 @@
+<!DOCTYPE html>
+<html>
+<head>
+    <title>MelytiX - marketing is simple</title>
+</head>
+<body>
+<p>User Id:{{ id }}</p>
+<p>Email: {{ email }}</p>
+<form class="form-inline" method="POST" action="/GA-Response">
+    <span class="input-group-addon">Account</span>
+    <select name="acc_select" id="acc" class="selectpicker form-control" onchange="giveSelection(this.value)">
+              {% for x in data %}
+              <option value="{{ x.get('id') }}">{{ x.get('name') }}</option>
+              {% endfor %}
+            </select>
+    <span class="input-group-addon">Property</span>
+    <select name="prop_select" id="prop" class="selectpicker form-control">
+              {% for properties in data %}
+                {% for property in properties.get('webProperties') %}
+              <option data-option="{{ properties.get('id') }}" value="{{ property.get('prop_id') }}">{{ property.get('prop_name') }}</option>
+                {% endfor %}
+              {% endfor %}
+            </select>
+    <span class="input-group-addon">Search Console uri</span>
+        <select name="site_select" id="site" class="selectpicker form-control">
+              {% for x in sites %}
+              <option value="{{ x }}">{{ x }}</option>
+              {% endfor %}
+        </select>
+    <input type="submit" value="submit" id="submit">
+</form>
+<script type="text/javascript">
+        var sel1 = document.querySelector('#acc');
+        var sel2 = document.querySelector('#prop');
+        var options2 = sel2.querySelectorAll('option');
+
+        function giveSelection(selValue) {
+          sel2.innerHTML = '';
+          for(var i = 0; i < options2.length; i++) {
+            if(options2[i].dataset.option === selValue) {
+              sel2.appendChild(options2[i]);
+            }
+          }
+        }
+
+        giveSelection(sel1.value);
+    </script>
+    <a class="button" href="/logout">Logout</a>
+</body>
+</html>
