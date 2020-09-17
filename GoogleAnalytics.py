@@ -78,11 +78,7 @@ def dump_data_for_melytips(ga_response):
                 'costPerConversion': x.get('metrics')[0].get('values')[4]
             }
 
-    if User.get_ga_data(current_user.id):
-        User.update_ga_data(current_user.id, ga_data)
-    else:
-        User.create_ga_table(current_user.id, ga_data)
-    return data
+    User.insert_data(current_user.email, ga_data)
 
 
 def g_get_viewid(account, web_property):
@@ -90,7 +86,7 @@ def g_get_viewid(account, web_property):
     profiles = service.management().profiles().list(
         accountId=account,
         webPropertyId=web_property).execute()
-    return profiles.get('items')[0].get('id')
+    return profiles['items'][0]['id']
 
 
 def g_get_select_data():

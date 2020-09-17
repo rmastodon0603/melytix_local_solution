@@ -2,6 +2,7 @@ from flask_login import UserMixin
 import pymongo
 import os
 from hashlib import pbkdf2_hmac
+import json
 
 # Connecting to Mogodb Atlas
 collection = pymongo.MongoClient(
@@ -122,6 +123,19 @@ class User(UserMixin):
             }},
             upsert=False
         )
+
+    @staticmethod
+    def insert_data(email: str, data: dict):
+        db.find_one_and_update(
+            {'email': email},
+            {'$set':{
+                'data': data
+            }})
+
+    @staticmethod
+    def dump_json(data: dict):
+        with open('result.json', 'w') as fp:
+            json.dump(data, fp)
 
     """@staticmethod
     def get_by_email(email):

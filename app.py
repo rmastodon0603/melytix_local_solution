@@ -45,14 +45,16 @@ def index():
     if not current_user.is_authenticated:
         return '<a class="button" href="/login" target="_top">Login</a>'
     else:
-        try:
-            print(YouTube.get_dash_yt_metrics(
-                session['start_date'],
-                session['end_date'])
-            )
-        except KeyError:
-            return render_template('calendar.html')
+        # try:
+        #     print(YouTube.get_dash_yt_metrics(
+        #         session['start_date'],
+        #         session['end_date'])
+        #     )
+        # except KeyError:
+        #     return render_template('calendar.html')
 
+        data = GoogleAnalytics.g_get_select_data()
+        sites = SearchConsole.get_site_list()
         return render_template('home.html', id=current_user.id,
                                email=current_user.email, data=data,
                                sites=sites)
@@ -61,7 +63,12 @@ def index():
 @app.route('/profile')
 @login_required
 def profile():
-    return '<a href="/add_a_system">Connect google to Melytix</a>'
+    return '<a href="/add_a_sys">Connect google to Melytix</a>'
+
+
+@app.route('/add_a_sys', methods=['GET'])
+def sys():
+    return render_template('connect_sys.html')
 
 
 @app.route('/add_a_system', methods=['GET', 'POST'])
@@ -73,8 +80,6 @@ def systems():
         User.add_scopes(current_user.email, SCOPE)
         Google_auth.Auth.SCOPE = SCOPE
         return redirect(url_for('google_login'))
-    else:
-        return render_template('connect_sys.html')
 
 
 @app.route('/GA-Response', methods=['GET', 'POST'])
@@ -85,6 +90,7 @@ def ga_response():
     site = request.form.get('site_select')
     session['site'] = site
     session['viewid'] = GoogleAnalytics.g_get_viewid(account, webProperty)
+    print(session['viewid'] ," ----session")
     return render_template('calendar.html')
 
 
@@ -100,6 +106,7 @@ def dashboard():
                                             start_date, end_date)
 
     metrics = Utils.prep_dash_metrics(ga_data, sc_data)
+    User.dump_json(metrics)
 
     return render_template('DashBoard.html', metrics=metrics)
 
@@ -124,7 +131,7 @@ def login():
         return render_template('Login.html')
 
 
-@app.route('/registration', methods=["POST"])
+@app.route('/registration', methods=["GET","POST"])
 def registration():
     if request.method == 'POST':
         email = request.form['email']
